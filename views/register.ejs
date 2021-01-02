@@ -6,25 +6,47 @@
         <%- include('includes/nav') %>
             <div class="container mt-5">
                 <h1>Register Page</h1>
-                <% if (message) { %>
-                    <div class="alert alert-success" role="alert">
-                        <%= message %>
+                <% if(message.body){ %>
+                    <div class="alert <%= message.type === 'success' ? 'alert-success' : 'alert-danger' %> ">
+                        <%= message.body %>
                     </div>
                     <% } %>
                         <form method="POST" action="/register">
                             <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Username<sup
-                                        class="text-danger">*</sup></label>
-                                <input type="text" name="username" class="form-control" id="username">
+                                <!-- <sup class="text-danger">*</sup> -->
+                                <label class="form-label">Username</label>
+                                <input type="text" name="username" id="username" value="<%= formData.username %>"
+                                    class="form-control <%= errors.username ? 'is-invalid' : '' %>">
+                                <% if(errors.username){ %>
+                                    <div class="invalid-feedback">
+                                        <%= errors.username %>
+                                    </div>
+                                    <% } %>
                             </div>
                             <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Email address<sup
-                                        class="text-danger">*</sup></label>
-                                <input type="email" name="email" class="form-control" id="email">
+                                <label class="form-label">Email address</label>
+                                <input type="email" name="email" id="email" value="<%= formData.email %>"
+                                    class="form-control <%= errors.email ? 'is-invalid' : '' %>">
+                                <% if(errors.email){ %>
+                                    <div class="invalid-feedback">
+                                        <%= errors.email %>
+                                    </div>
+                                    <% } %>
                             </div>
                             <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" id="password">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" id="password" value="<%= formData.password %>"
+                                    class="form-control <%= errors.password ? 'is-invalid' : '' %>">
+                                <% if(errors.password){ %>
+                                    <div class="invalid-feedback">
+                                        <%= errors.password %>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" name="repeat_password" id="repeat_password"
+                                    value="<%= formData.password %>" class="form-control">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
-    minlength: [8, 'Use 8 characters or more for your password']
+    required: true
+    // minlength: [8, 'Use 8 characters or more for your password']
   },
   isActive: {
     type: Boolean,
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) next()
+  if (!this.isModified('password')) { next() }
   this.password = await bcrypt.hash(this.password, 10)
   next()
 })
