@@ -56,22 +56,54 @@ router.post('/register', guestMiddleware, async (req, res) => {
   }
 })
 
-router.get('/login', guestMiddleware, (req, res) => {
-  return res.render('login', {
-    formData: req.body
-  })
+router.get('/login', guestMiddleware, flashMiddleware, (req, res) => {
+  return res.render('login')
 })
 
-router.post('/login', guestMiddleware, passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login'
-}), (req, res) => {
-  return res.render('login', {
-    message: {
-      type: 'success',
-      body: 'Login Successfully'
+/*
+  custom callback of passportjs
+  (err, user, info) matches done(arg1, arg2, arg3) in localStrategy
+  err: null/e
+  user: user object -> true/false
+  info: message
+*/
+router.post('/login', guestMiddleware, (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      console.error('Error: ' + err)
+      req.session.flashData = {
+        message: {
+          type: 'error',
+          body: 'There is an error...'
+        }
+      }
+      return res.redirect('/login')
     }
-  })
+
+    if (!user) {
+      req.session.flashData = {
+        message: {
+          type: 'error',
+          body: info.message
+        }
+      }
+      return res.redirect('/login')
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error('Err:', err)
+        req.session.flashData = {
+          message: {
+            type: 'error',
+            body: 'Login failed'
+          }
+        }
+      }
+      console.log(user)
+      return res.redirect('/homepage')
+    })
+  })(req, res, next)
 })
 
 /*

@@ -34,7 +34,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/homepage', authMiddleware, (req, res) => {
-  res.send(`welcome ${req.user.name}`)
+  console.log(req.user)
+  res.send('welcome')
 })
 
 app.listen('3000', () => {

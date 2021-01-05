@@ -9,14 +9,11 @@ async (email, password, done) => {
   try {
     const user = await User.findOne({ email: email })
     if (!user) {
-      console.log(user + 'wrong user')
-      done(null, false, { message: 'Incorrect username.' })
+      done(null, false, { message: 'Incorrect email.' })
     } else {
       if (await user.checkPassword(password)) {
         done(null, user)
-        console.log(user)
       } else {
-        console.log('wrong pwd')
         done(null, false, { message: 'Incorrect password.' })
       }
     }
