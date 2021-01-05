@@ -10,3 +10,5 @@ mongoose.connect('mongodb+srv://Admin:1019@cluster0.46erz.mongodb.net/8-ecommerc
   .then(() => {
     console.log('Connected to MongoDB')
   })
+
+module.exports = mongoose.connection
