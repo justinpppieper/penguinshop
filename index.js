@@ -14,7 +14,6 @@ app.locals.message = {}
 app.locals.errors = {}
 app.locals.formData = {}
 
-app.use(bodyParser.urlencoded({ extended: false }))
 app.set('view engine', 'ejs')
 app.use(session({
   secret: 'shh',
@@ -23,7 +22,8 @@ app.use(session({
   cookie: { secure: false }, // true works for https only
   store: new MongoStore({ mongooseConnection: mongooseConnection })
 }))
-
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.static('public'))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use('/', authRoutes)
@@ -36,6 +36,10 @@ app.get('/', (req, res) => {
 app.get('/homepage', authMiddleware, (req, res) => {
   console.log(req.user)
   res.send('welcome')
+})
+
+app.use((req, res, next) => {
+  res.status(404).render('404')
 })
 
 app.listen('3000', () => {
