@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoute')
 const mongooseConnection = require('./utils/db.config')
 const authMiddleware = require('./middlewares/authMiddleware')
 require('./utils/authStrategies/localStrategy')
+require('dotenv').config()
 
 const app = express()
 
@@ -42,8 +43,8 @@ app.use((req, res, next) => {
   res.status(404).render('404')
 })
 
-app.listen('3000', () => {
-  console.log('Server is running at port 3000')
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running at port ${process.env.PORT}`)
 })
 
 module.exports = app

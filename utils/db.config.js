@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+require('dotenv').config()
 
-mongoose.connect('mongodb+srv://Admin:1019@cluster0.46erz.mongodb.net/8-ecommerce-app?retryWrites=true&w=majority',
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_URL}`,
   {
     useNewUrlParser: true,
     useFindAndModify: false,

@@ -26,7 +26,7 @@ router.post('/register', guestMiddleware, async (req, res) => {
       req.session.flashData = {
         message: {
           type: 'error',
-          body: 'Validation Errors'
+          body: 'joi Validation Errors'
         },
         errors: joiErrors,
         formData: req.body
@@ -47,7 +47,7 @@ router.post('/register', guestMiddleware, async (req, res) => {
     req.session.flashData = {
       message: {
         type: 'error',
-        body: 'Something went wrong'
+        body: 'MongoDB Validation Errors'
       },
       errors: mongooseErrorFormat(e),
       formData: req.body

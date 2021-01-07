@@ -4,7 +4,7 @@ const flashMiddleware = (req, res, next) => {
     for (const key in req.session.flashData) {
       res.locals[key] = req.session.flashData[key]
     }
-    console.log(res.locals)
+    console.log(req.session.flashData)
     req.session.flashData = null
   }
   // }

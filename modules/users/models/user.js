@@ -7,12 +7,12 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Enter username'],
     minlength: [2, 'Username can\'t be less than 2 characters'],
     maxlength: [64, 'Username can\'t be more than 64 characters'],
-    unique: [true, 'That username is taken. Please try another.']
+    unique: true
   },
   email: {
     type: String,
     required: [true, 'Enter email address'],
-    unique: [true, 'This email has already registered'],
+    unique: true,
     index: true
   },
   password: {
@@ -30,12 +30,40 @@ const userSchema = new mongoose.Schema({
   }
 })
 
+/*
+  validate unique username
+ */
+userSchema.path('username').validate(async (username) => {
+  const result = await User.countDocuments({ username: username })
+  if (result > 0) {
+    return false
+  }
+  return true
+}, 'That username is taken. Please try another.')
+
+/*
+  validate unique email
+ */
+userSchema.path('email').validate(async (email) => {
+  const result = await User.countDocuments({ email: email })
+  if (result > 0) {
+    return false
+  }
+  return true
+}, 'This email has already been registerd')
+
+/*
+  encrypts password if value changed
+ */
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) { next() }
   this.password = await bcrypt.hash(this.password, 10)
   next()
 })
 
+/*
+  check if password matches
+ */
 userSchema.methods.checkPassword = async function (password) {
   const result = await bcrypt.compare(password, this.password)
   return result
