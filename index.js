@@ -27,16 +27,22 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static('public'))
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use((req, res, next) => {
+  res.locals.user = req.isAuthenticated() ? req.user : null
+  next()
+})
+
 app.use('/', authRoutes)
 
 app.get('/', (req, res) => {
-  // console.log('user:', req.user)
   return res.render('index')
 })
 
 app.get('/homepage', authMiddleware, (req, res) => {
-  console.log(req.user)
-  res.send('welcome')
+  // res.send('welcome ' + req.user.username)
+  // console.log(req.user)
+  res.render('dashboard')
 })
 
 app.use((req, res, next) => {

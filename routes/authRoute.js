@@ -31,7 +31,6 @@ router.post('/register', guestMiddleware, async (req, res) => {
         errors: joiErrors,
         formData: req.body
       }
-      console.log(req.session.flashData)
       return res.redirect('/register')
     } else {
       const user = await createUser(req.body)
@@ -100,7 +99,6 @@ router.post('/login', guestMiddleware, (req, res, next) => {
           }
         }
       }
-      console.log(user)
       return res.redirect('/homepage')
     })
   })(req, res, next)
