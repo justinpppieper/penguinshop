@@ -5,7 +5,8 @@ const MongoStore = require('connect-mongo')(session)
 const passport = require('passport')
 const authRoutes = require('./routes/authRoute')
 const mongooseConnection = require('./utils/db.config')
-const authMiddleware = require('./middlewares/authMiddleware')
+const expressLayouts = require('express-ejs-layouts')
+const { authMiddleware } = require('./middlewares')
 require('./utils/authStrategies/localStrategy')
 require('dotenv').config()
 
@@ -16,6 +17,9 @@ app.locals.errors = {}
 app.locals.formData = {}
 
 app.set('view engine', 'ejs')
+app.use(express.static('public'))
+app.use(expressLayouts)
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(session({
   secret: 'shh',
   resave: false,
@@ -23,8 +27,6 @@ app.use(session({
   cookie: { secure: false }, // true works for https only
   store: new MongoStore({ mongooseConnection: mongooseConnection })
 }))
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(express.static('public'))
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -36,13 +38,12 @@ app.use((req, res, next) => {
 app.use('/', authRoutes)
 
 app.get('/', (req, res) => {
-  return res.render('index')
+  return res.render('client/homepage')
 })
 
 app.get('/homepage', authMiddleware, (req, res) => {
   // res.send('welcome ' + req.user.username)
-  // console.log(req.user)
-  res.render('dashboard')
+  res.render('client/homepage')
 })
 
 app.use((req, res, next) => {

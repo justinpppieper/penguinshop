@@ -5,8 +5,7 @@ const passport = require('passport')
 const { createUser } = require('../modules/users/services/userService')
 const { authValSchema } = require('../modules/users/validations/authValidation')
 const { joiErrorFormat, mongooseErrorFormat } = require('../utils/valFormat')
-const guestMiddleware = require('../middlewares/guestMiddleware')
-const flashMiddleware = require('../middlewares/flashMiddleware')
+const { guestMiddleware, flashMiddleware } = require('../middlewares')
 
 router.get('/register', guestMiddleware, flashMiddleware, (req, res) => {
   return res.render('register', {

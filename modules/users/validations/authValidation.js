@@ -2,8 +2,8 @@ const Joi = require('joi')
 
 const authValSchema = Joi.object({
   username: Joi.string()
-    // .min(2)
-    .max(64)
+    // .min(6)
+    .max(30)
     .trim()
     .required(),
 
