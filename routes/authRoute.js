@@ -8,9 +8,7 @@ const { joiErrorFormat, mongooseErrorFormat } = require('../utils/valFormat')
 const { guestMiddleware, flashMiddleware } = require('../middlewares')
 
 router.get('/register', guestMiddleware, flashMiddleware, (req, res) => {
-  return res.render('register', {
-    formData: req.body
-  })
+  return res.render('register', { layout: 'layouts/client/layout' })
 })
 
 router.post('/register', guestMiddleware, async (req, res) => {
@@ -55,7 +53,7 @@ router.post('/register', guestMiddleware, async (req, res) => {
 })
 
 router.get('/login', guestMiddleware, flashMiddleware, (req, res) => {
-  return res.render('login')
+  return res.render('login', { layout: 'layouts/client/layout' })
 })
 
 /*

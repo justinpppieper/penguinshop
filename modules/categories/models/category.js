@@ -10,7 +10,7 @@ const categoryschema = mongoose.Schema({
   },
   description: {
     type: String,
-    require: [true, 'Description of category is required']
+    require: [true, 'Category Description is required']
   },
   seoDescription: {
     type: String,

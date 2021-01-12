@@ -16,7 +16,7 @@
             </div>
             <div class="info">
                 <a href="#" class="d-block">
-                    <%= user.username %>
+                    <%= user? user.username : 'guest' %>
                 </a>
             </div>
         </div>

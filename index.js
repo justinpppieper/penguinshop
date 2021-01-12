@@ -1,9 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
+const MongoStorage = require('connect-mongo')(session)
 const passport = require('passport')
-const authRoutes = require('./routes/authRoute')
+const { authRoute, categoryRoute } = require('./routes')
 const mongooseConnection = require('./utils/db.config')
 const expressLayouts = require('express-ejs-layouts')
 const { authMiddleware } = require('./middlewares')
@@ -19,13 +19,14 @@ app.locals.formData = {}
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(expressLayouts)
+app.set('layout', 'layouts/admin/layout')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(session({
   secret: 'shh',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }, // true works for https only
-  store: new MongoStore({ mongooseConnection: mongooseConnection })
+  store: new MongoStorage({ mongooseConnection: mongooseConnection })
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -35,15 +36,21 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/', authRoutes)
+app.use('/', authRoute)
+app.use('/', categoryRoute)
 
 app.get('/', (req, res) => {
-  return res.render('client/homepage')
+  return res.render('homepage', { layout: 'layouts/client/layout' })
 })
 
 app.get('/homepage', authMiddleware, (req, res) => {
   // res.send('welcome ' + req.user.username)
-  res.render('client/homepage')
+  res.render('homepage', { layout: 'layouts/client/layout' })
+})
+
+app.get('/dashboard', authMiddleware, (req, res) => {
+  // res.send('welcome ' + req.user.username)
+  res.render('dashboard')
 })
 
 app.use((req, res, next) => {
