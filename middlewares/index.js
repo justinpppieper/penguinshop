@@ -21,6 +21,7 @@ const flashMiddleware = (req, res, next) => {
   next()
 }
 
+// if logged in, user could not go to register page
 const guestMiddleware = (req, res, next) => {
   if (!req.isAuthenticated()) {
     next()

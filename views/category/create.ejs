@@ -1,4 +1,269 @@
-<body>
-    <h1>category create page category create page category create page</h1>
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="m-0">Create Category</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                    <li class="breadcrumb-item active">Category</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.content-header -->
 
-</body>
+<div class="content" id="app">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- card: category -->
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <h3 class="card-title">Create Category</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form method="POST" v-on:submit.prevent="saveCategory">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="category_name" class="required-field">Name</label>
+                                <input v-model="category.name" type="text" class="form-control" id="category_name"
+                                    placeholder="Please enter category name here" required>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input v-model="category.isLeaf" class="form-check-input" id="is_leaf" type="checkbox">
+                                <label for="is_leaf" class="form-check-label required-field">Leaf Category</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="parent_category">ParentCategory</label>
+                                <select v-model="category.categoryId" class="form-control">
+                                    <option v-for="category in parentCategories" :value="category._id"> {{ category.name
+                                        }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="form-label required-field">Description</label>
+                                <textarea v-model="category.description" class="form-control" id="description"
+                                    placeholder="Please enter description here" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="seoDescription" class="form-label">SEO Description(120-150
+                                    characters)</label>
+                                <textarea v-model="category.seoDescription" class="form-control" id="seoDescription"
+                                    placeholder="Please enter description here"></textarea>
+                            </div>
+                            <!-- property start -->
+                            <h3 class="py-3 border-bottom">Properties</h3>
+                            <div v-for="(property, index) in category.properties" :key="index"
+                                class="form-group border-bottom pb-3">
+                                <!-- property -> name & property -> input -> type box -->
+                                <div class="row">
+                                    <!-- property input box -->
+                                    <div class="col-md-4">
+                                        <label for="'property_name_' + index" class="required-field">Property {{index +
+                                            1}}</label>
+                                        <input v-model="property.name" :id="'property_name_' + index" type="text"
+                                            class="form-control" placeholder="Enter Property Name">
+                                    </div>
+                                    <!-- property type drop box -->
+                                    <div class="form-group col-md-4">
+                                        <label for="'property_type_' + index" class="required-field">InputType</label>
+                                        <select v-model="property.input.type" :id="'property_type_' + index"
+                                            class="form-control">
+                                            <option v-for="inputType in inputTypes" :value="inputType.value">
+                                                {{inputType.label}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- property required & filterable check box -->
+                                    <div
+                                        class="form-check col-md-2 d-flex flex-column align-items-center justify-content-center">
+                                        <div>
+                                            <input v-model="property.required" :id="'property_required_' + index"
+                                                class="form-check-input" type="checkbox" checked>
+                                            <label class="form-check-label required-field">Required</label>
+                                        </div>
+                                        <div>
+                                            <input v-model="property.filterable" :id="'property_filterable_' + index"
+                                                class="form-check-input" type="checkbox" checked>
+                                            <label class="form-check-label required-field">Filterable</label>
+                                        </div>
+                                        <div>
+                                            <input v-model="property.hasUnits" :id="'property_has_units_' + index"
+                                                class="form-check-input" type="checkbox">
+                                            <label class="form-check-label required-field">Has Units</label>
+                                        </div>
+                                    </div>
+                                    <!-- property delete button -->
+                                    <div class="col-md-2 d-flex">
+                                        <button v-on:click="deleteProperty(index)" type="button"
+                                            class="btn btn-block btn-outline-dark align-self-center">Delete</button>
+                                    </div>
+                                </div>
+
+                                <!-- inputPropertyChoices block -->
+                                <div v-if="property.input.type === 'selectOne'" class="card bg-light my-3 col-md-10">
+                                    <div class="card-header row">
+                                        <p class="col">{{property.name}} Property Choices</p>
+                                        <!-- add choice button -->
+                                        <div class="col-3">
+                                            <button v-on:click="addPropertyChoice(property)" type="button"
+                                                class="btn btn-block btn-dark btn-sm">Add Choice</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div v-for="(choice, choiceIndex) in property.input.propertyChoices"
+                                            :key="choiceIndex" class="row mb-3">
+                                            <!-- label -->
+                                            <div class="col">
+                                                <label for="'choice_label_' + choiceIndex"
+                                                    class="fw-light required-field">Chioce {{choiceIndex + 1}} Label:
+                                                </label>
+                                                <input v-model="choice.label" :id="'choice_label_' + choiceIndex"
+                                                    type="text" class="form-control" placeholder="Enter Property">
+                                            </div>
+                                            <!-- value -->
+                                            <div class="col">
+                                                <label for="'choice_value_' + choiceIndex" class="required-field">Choice
+                                                    {{choiceIndex + 1}} Value: </label>
+                                                <input v-model="choice.value" :id="'choice_value_' + choiceIndex"
+                                                    type="text" class="form-control" placeholder="Enter Property">
+                                            </div>
+                                            <!-- delete button -->
+                                            <div class="col-2 d-flex">
+                                                <button v-on:click="deletePropertyChoice(choiceIndex, property)"
+                                                    type="button"
+                                                    class="btn btn-block btn-outline-dark btn-sm align-self-end">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.inputPropertyChoices block -->
+
+                                <!-- filter block -->
+                                <div v-if="property.filterable" class="card bg-light my-3 col-md-10">
+                                    <div class="card-header row">
+                                        <p class="col">{{property.name}} Filter Choices</p>
+                                        <div class="col-3">
+                                            <button v-on:click="addFilter(property)" type="button"
+                                                class="btn btn-block btn-dark btn-sm">Add Filter</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div v-for="(filter, filterIndex) in property.filterChoices" class="row mb-3">
+                                            <div class="col">
+                                                <label for="'filter_label_' + filterIndex"
+                                                    class="required-field">Label</label>
+                                                <input v-model="filter.label" :id="'filter_label_' + filterIndex"
+                                                    type="text" class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <label for="'filter_value_' + filterIndex"
+                                                    class="required-field">Value</label>
+                                                <input v-model="filter.value" :id="'filter_value_' + filterIndex"
+                                                    type="text" class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group m-0 p-0">
+                                                    <label for="'property_type_' + index" class="required-field">Filter
+                                                        Type</label>
+                                                    <select v-model="filter.type" :id="'property_type_' + index"
+                                                        class="form-control">
+                                                        <option v-for="filterType in filterTypes"
+                                                            :value="filterType.value">
+                                                            {{filterType.label}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-2 d-flex">
+                                                <button v-on:click="deleteFilter(property, filterIndex)"
+                                                    class="btn btn-block btn-outline-dark btn-sm align-self-end"
+                                                    type="button">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.filter block -->
+
+                                <!-- units block -->
+                                <div v-if="property.hasUnits" class="card bg-light my-3 col-md-10">
+                                    <div class="card-header row">
+                                        <p class="col">{{property.name}} Units</p>
+                                        <div class="col-3">
+                                            <button v-on:click="addUnit(property)" class="btn btn-block btn-dark btn-sm"
+                                                type="button">Add Unit</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div v-for="(unit, unitIndex) in property.units" class="row mb-3">
+                                            <div class="col">
+                                                <label for="'unit_label_' + unitIndex"
+                                                    class="required-field">Label</label>
+                                                <input v-model="unit.label" :id="'unit_label_' + unitIndex" type="text"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <label for="'unit_printlabel_' + unitIndex" class="required-field">Print
+                                                    Label</label>
+                                                <input v-model="unit.printLabel" :id="'unit_printlabel_' + unitIndex"
+                                                    type="text" class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <label for="'unit_threshold_' + unitIndex">Threshold</label>
+                                                <input v-model="unit.threshold" :id="'unit_threshold_' + unitIndex"
+                                                    type="text" class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <label for="'unit_nextlabel_' + unitIndex">Next Label</label>
+                                                <input v-model="unit.nextLabel" :id="'unit_nextlabel_' + unitIndex"
+                                                    type="text" class="form-control">
+                                            </div>
+                                            <div class="col-2 d-flex">
+                                                <button v-on:click="deleteUnit(property, unitIndex)"
+                                                    class="btn btn-block btn-outline-dark btn-sm align-self-end"
+                                                    type="button">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.units block -->
+                            </div>
+
+                            <!-- add property button -->
+                            <div class="col-2 p-0">
+                                <button v-on:click="addProperty" class="btn btn-block btn-light" type="button">Add
+                                    Property</button>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-dark">Submit</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</div>
+<% var parentCategories=parentCategories %>
+    <script type="text/javascript">
+        var parentCategories = JSON.parse('<%- JSON.stringify(parentCategories) %>')
+        var inputTypes = JSON.parse('<%- JSON.stringify(inputTypes) %>')
+        var filterTypes = JSON.parse('<%- JSON.stringify(filterTypes) %>')
+        var categories = {}
+        var pageInfo = {}
+    </script>
+
+
+    <!-- <% var parentCategories=parentCategories %>
+    <% if (typeof parentCategories !=='undefined' ) { %>
+        <script type="text/javascript">
+            var parentCategories = JSON.parse('<%- JSON.stringify(parentCategories) %>')
+        </script>
+        <% } %> -->

@@ -3,10 +3,13 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStorage = require('connect-mongo')(session)
 const passport = require('passport')
-const { authRoute, categoryRoute } = require('./routes')
+const authRoute = require('./routes/authRoute')
+const categoryRoute = require('./routes/categoryRoute')
+const apiRoute = require('./routes/apiRoute')
 const mongooseConnection = require('./utils/db.config')
 const expressLayouts = require('express-ejs-layouts')
 const { authMiddleware } = require('./middlewares')
+const { trimString } = require('./utils/global')
 require('./utils/authStrategies/localStrategy')
 require('dotenv').config()
 
@@ -19,8 +22,9 @@ app.locals.formData = {}
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(expressLayouts)
-app.set('layout', 'layouts/admin/layout')
+app.set('layout', 'master/default/layouts/layout')
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 app.use(session({
   secret: 'shh',
   resave: false,
@@ -32,25 +36,29 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use((req, res, next) => {
+  trimString(req.body)
+  return next()
+})
+
+app.use((req, res, next) => {
   res.locals.user = req.isAuthenticated() ? req.user : null
-  next()
+  return next()
 })
 
 app.use('/', authRoute)
 app.use('/', categoryRoute)
+app.use('/api/v1/category', apiRoute)
 
 app.get('/', (req, res) => {
-  return res.render('homepage', { layout: 'layouts/client/layout' })
+  return res.render('homepage')
 })
 
 app.get('/homepage', authMiddleware, (req, res) => {
-  // res.send('welcome ' + req.user.username)
-  res.render('homepage', { layout: 'layouts/client/layout' })
+  res.render('homepage')
 })
 
 app.get('/dashboard', authMiddleware, (req, res) => {
-  // res.send('welcome ' + req.user.username)
-  res.render('dashboard')
+  res.render('dashboard', { layout: 'master/dashboard/layouts/layout' })
 })
 
 app.use((req, res, next) => {
