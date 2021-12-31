@@ -10,21 +10,20 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="">
     <img src="./public/readme_img/logo.JPG" alt="Logo" width="85%">
   </a>
   <br />
-  <h1 align="center">welcome, penguins</h1>
+  <h3 align="center">welcome, penguins</h3>
 </div>
+<br />
+<br />
 <br />
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
 Please don't read this readme.
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 ### Built With
@@ -96,7 +95,7 @@ Here are also mongoose validators in the user schema. Also, encrypt and check pa
 
 ![register_error]
 
-### Login page
+### Login Page
 
 ![login]
 
@@ -127,7 +126,8 @@ tip:  `btn-block` has been removed in Bootstrap 5, instead, using `w-100` or `co
 
 ### Alert
 
-Popups power by [sweetalert2](https://sweetalert2.github.io/#examples). 
+Popups power by [sweetalert2](https://sweetalert2.github.io/#examples).
+
 ![create_success]
 
 
@@ -144,6 +144,7 @@ Applied [Vue Pagination](https://vuejsexamples.com/tag/pagination/) and [Vue Loa
 
 ### Filter
 debounce applied here to avoid querying by every single character. 
+
 ![list_keyword]
 
 ### Webpack
