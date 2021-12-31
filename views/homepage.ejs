@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<body>
-    <h1>Hello, <%= user? user.username : 'guest' %>
-    </h1>
-</body>
-
-</html>
+<div class="h-75 d-flex align-items-center border-bottom">
+    <div class="w-75 mx-auto row align-items-center">
+        <h1 class="col-6 d-flex justify-content-center">Welcome, <%= user? user.username : 'guest' %> !</h1>
+        <img class="col-6 mw-100" src="/images/homepage.svg" />
+    </div>
+</div>

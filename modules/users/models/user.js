@@ -43,6 +43,8 @@ userSchema.path('username').validate(async (username) => {
 
 /*
   validate unique email
+  mongoose plug-in function which takes two arguments
+  /countDocuments/ in Mongoose is /count/ in mongoDB
  */
 userSchema.path('email').validate(async (email) => {
   const result = await User.countDocuments({ email: email })
@@ -62,6 +64,7 @@ userSchema.pre('save', async function (next) {
 })
 
 /*
+  customized method:
   check if password matches
  */
 userSchema.methods.checkPassword = async function (password) {

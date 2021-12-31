@@ -1,0 +1,97 @@
+<div class="content" id="app1">
+    <div class="container-fluid my-3">
+        <!-- loader -->
+        <div class="vld-parent">
+            <loading :active='isLoading' :is-full-page='true'>
+            </loading>
+        </div>
+        <!-- /.loader -->
+
+        <div class="card">
+            <!-- card header -->
+            <div class="card-header row align-items-center border-0">
+                <h3 class="card-title col">Category List</h3>
+                <a href="/create" class="btn btn-dark btn-small col-1">New</a>
+            </div>
+            <!-- /.card-header -->
+
+            <!-- card-body -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="pagesize">Page Size</label>
+                        <select v-model="pageSize" class="form-control" id="pagesize">
+                            <option>5</option>
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="keyword" class="form-label">Keyword</label>
+                        <input v-model="keyword" class="form-control" id="keyword"></input>
+                    </div>
+                </div>
+                <template v-if="categories.length">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="d-flex">
+                                <th class="col-1">#</th>
+                                <th class="col-2">Name</th>
+                                <th class="col-3">Description</th>
+                                <th class="col-3">seoDescription</th>
+                                <th class="col-1">Leaf Category</th>
+                                <!-- <th scope="col">Created</th>
+                                <th scope="col">Last Updated</th> -->
+                                <th class="w-100">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="d-flex" v-for="(category, index) in categories" :key="category._id">
+                                <td class="col-1">{{ getCategoryNumber(index) }}</td>
+                                <td class="col-2">{{ category.name }}</td>
+                                <td class="col-3">{{ category.description }}</td>
+                                <td class="col-3">{{ category.seoDescription }}</td>
+                                <td class="col-1">{{ category.isLeaf }}</td>
+                                <!-- <td>{{ category.createdAt }}</td>
+                                <td>{{ category.updatedAt }}</td> -->
+                                <td class="w-100 row d-flex justify-content-between">
+                                    <!-- <button class="btn btn-block btn-outline-dark btn-sm col-4" type="button">Edit</button> -->
+                                    <button v-on:click="deleteCategory(category._id, category.name)"
+                                        class="btn btn-block btn-outline-dark btn-sm col-4 mt-0"
+                                        type="button">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
+            </div>
+            <!-- /.card-body -->
+
+            <!-- pagination -->
+            <div v-if="pagination.totalPages > 1" class="d-flex justify-content-end px-3">
+                <paginate :page-count="pagination.totalPages" :page-range="3" :margin-pages="2"
+                    :click-handler="jumpToPage" :prev-text="'Prev'" :next-text="'Next'" :container-class="'pagination'"
+                    :page-class="'page-item'" :prev-class="'page-item'" :next-class="'page-item'"
+                    :page-link-class="'page-link'" :prev-link-class="'page-link'" :next-link-class="'page-link'">
+                </paginate>
+            </div>
+        </div>
+
+        <div v-if="categories.length <= 0">
+            <h3 class="d-flex justify-content-center mb-5">No Category.</h3>
+            <img src="/images/empty.svg" alt="" class="mw-100 mx-auto d-block" />
+        </div>
+    </div>
+</div>
+
+<% var categories=categories %>
+    <% var pageInfo=pageInfo %>
+
+        <script>
+            var categories = JSON.parse('<%- JSON.stringify(categories) %>')
+            var pageInfo = JSON.parse('<%- JSON.stringify(pageInfo) %>')
+            var parentCategories = {}
+            var inputTypes = {}
+            var filterTypes = {}
+        </script>

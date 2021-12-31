@@ -3,18 +3,18 @@ const router = express.Router()
 const passport = require('passport')
 
 const { createUser } = require('../modules/users/services/userService')
-const { authValSchema } = require('../modules/users/validations/authValidation')
-const { joiErrorFormat, mongooseErrorFormat } = require('../utils/valFormat')
+const { joiValidation } = require('../modules/users/validations/joiValidation')
+const { joiErrorFormat, mongooseErrorFormat } = require('../utils/validationFormat')
 const { guestMiddleware, flashMiddleware } = require('../middlewares')
 
 router.get('/register', guestMiddleware, flashMiddleware, (req, res) => {
-  return res.render('register', { layout: 'layouts/client/layout' })
+  return res.render('auth/register')
 })
 
 router.post('/register', guestMiddleware, async (req, res) => {
   try {
     // joi validation
-    const userValResult = authValSchema.validate(req.body, {
+    const userValResult = joiValidation.validate(req.body, {
       abortEarly: false
     })
     if (userValResult.error) {
@@ -34,7 +34,7 @@ router.post('/register', guestMiddleware, async (req, res) => {
       req.session.flashData = {
         message: {
           type: 'success',
-          body: 'Registrated successfully'
+          body: 'Successfully Created Your Account!'
         }
       }
       return res.redirect('/register')
@@ -53,10 +53,12 @@ router.post('/register', guestMiddleware, async (req, res) => {
 })
 
 router.get('/login', guestMiddleware, flashMiddleware, (req, res) => {
-  return res.render('login', { layout: 'layouts/client/layout' })
+  return res.render('auth/login')
 })
 
 /*
+  this code block is basically from passport.js website
+  but replacing passport.js authentication handling from the one we customized - flashData
   custom callback of passportjs
   (err, user, info) matches done(arg1, arg2, arg3) in localStrategy
   err: null/e
