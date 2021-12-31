@@ -43,7 +43,7 @@
                                 <th class="col-1">Leaf Category</th>
                                 <!-- <th scope="col">Created</th>
                                 <th scope="col">Last Updated</th> -->
-                                <th class="col-2">Actions</th>
+                                <th class="w-100">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,7 +55,7 @@
                                 <td class="col-1">{{ category.isLeaf }}</td>
                                 <!-- <td>{{ category.createdAt }}</td>
                                 <td>{{ category.updatedAt }}</td> -->
-                                <td class="col-2 row d-flex justify-content-between">
+                                <td class="w-100 row d-flex justify-content-between">
                                     <!-- <button class="btn btn-block btn-outline-dark btn-sm col-4" type="button">Edit</button> -->
                                     <button v-on:click="deleteCategory(category._id, category.name)"
                                         class="btn btn-block btn-outline-dark btn-sm col-4 mt-0"
