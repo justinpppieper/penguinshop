@@ -14,7 +14,6 @@
     <img src="./public/readme_img/logo.JPG" alt="Logo" width="85%">
   </a>
   <br />
-  <br />
   <h1 align="center">welcome, penguins</h1>
 </div>
 <br />
