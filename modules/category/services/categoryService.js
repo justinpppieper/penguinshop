@@ -34,7 +34,6 @@ const createCategory = async (categoryInput) => {
             const property = new Property(propertyInput)
             await property.save()
             propertyIds.push(property._id)
-            console.log(propertyIds)
         } 
     }
 
@@ -46,8 +45,8 @@ const createCategory = async (categoryInput) => {
 
 const getParentCategories = async () => {
     const parentCategories = await Category.find({
-        isLeaf: true,
-        isActive: true
+        isLeaf: false,
+        // isActive: true
     }).lean()
     return parentCategories
 }
@@ -61,12 +60,6 @@ const getCategoriesOnPage = async ({ pageIndex = defaultPageOffset, pageSize = d
             $regex: keyword
         }
     }
-    // const categories = await Category
-    //     .find(temp)
-    //     .skip(getDocumentOffset({ pageOffset, pageSize }))
-    //     .limit(pageSize)
-    //     .lean()
-    // const totalDocument = await Category.countDocuments({})
 
     const [categories, totalDocument] = await Promise.all([
         Category

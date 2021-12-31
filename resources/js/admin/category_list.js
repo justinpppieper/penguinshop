@@ -1,7 +1,7 @@
 Vue.component('paginate', VuejsPaginate)
 Vue.use(VueLoading);
 Vue.component('loading', VueLoading)
-// Vue.component('lodash', debounce)
+const debounce = require('lodash.debounce')
 
 const app1 = new Vue({
 
@@ -31,10 +31,10 @@ const app1 = new Vue({
       })
     },
 
-    // _jumpToPage: debounce(function () {
-    //     this.jumpToPage(this.pageIndex)
-    //   }, 1000
-    // ),
+    _jumpToPage: debounce(function () {
+        this.jumpToPage(this.pageIndex)
+      }, 1000
+    ),
 
     getCategoryNumber: function (index) {
         return ((this.pageInfo.pageIndex - 1) * this.pageInfo.pageSize + index + 1)
@@ -77,11 +77,11 @@ const app1 = new Vue({
 
   watch: {
     pageSize: function () {
-      this.jumpToPage()
+      this._jumpToPage()
     },
 
     keyword: function () {
-      this.jumpToPage()
+      this._jumpToPage()
     }
   }
 })

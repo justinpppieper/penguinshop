@@ -23,7 +23,7 @@ const app = new Vue({
         .then(response => {
           Swal.fire(
             response.data.message,
-            'success'
+            'success.'
           ).then( _ => {
             window.location = '/create'
           })
@@ -55,7 +55,6 @@ const app = new Vue({
         value: '',
         type: ''
       }
-
       if (Array.isArray(property.filterChoices)) {
         return property.filterChoices.push(filterObj)
       }
@@ -73,7 +72,6 @@ const app = new Vue({
           threshold: '',
           nextLabel: ''
       }
-
       if(Array.isArray(property.units)) {
         return property.units.push(unitObj)
       }
@@ -85,12 +83,10 @@ const app = new Vue({
     },
 
     addPropertyChoice: function (property) {
-
       const choiceObj = {
         label: '',
         value: ''
       }
-
       if (Array.isArray(property.input.propertyChoices)) {
         return property.input.propertyChoices.push(choiceObj)
       }
